@@ -20,7 +20,6 @@ def test_kb1():
             InlineKeyboardButton(text="нет", callback_data='тест нет')
         ]
     ]
-    print('клавиатура 1')
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb)
     return keyboard
 
@@ -34,7 +33,6 @@ def test_kb2():
             InlineKeyboardButton(text="воздух", callback_data='тест воздух')
         ]
     ]
-    print('клавиатура 2')
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb)
     return keyboard
 
@@ -46,7 +44,6 @@ def test_kb3():
             InlineKeyboardButton(text="лето", callback_data='тест лето')
         ]
     ]
-    print('клавиатура 3')
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb)
     return keyboard
 
@@ -58,6 +55,5 @@ def test_kb4():
             InlineKeyboardButton(text="улица", callback_data='тест улица')
         ]
     ]
-    print('клавиатура 4')
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb)
     return keyboard

@@ -54,9 +54,12 @@ async def echo_handler(message: types.Message) -> None:
         if message.text.lower() == 'хочу выбрать секцию':
             await message.answer(f'тут ты должен назвать секцию. '
                                  '\n<b>Вот доступные виды спорта:</b>')
-            l = []
-            for i in sport_list():
-                await message.answer(str(i))
+            text = ''
+            sport = sport_list()
+            for i in range(0, len(sport)):
+                # await message.answer(str(i))
+                text += f'{i+1}. {sport[i]}\n'
+            await message.answer(text)
             await message.answer('Напиши название спорта:')
 
         elif message.text.lower() == 'хочу чтобы мне выбрали спорт':
@@ -121,10 +124,12 @@ async def callback(callback: types.CallbackQuery):
             await callback.message.answer('Подожди, я думаю какой спорт тебе подходит)')
 
             l = advise_sport(decit)
+            text = ''
             if len(l) > 0:
                 await callback.message.answer('Вам подходит:')
-                for i in l:
-                    await callback.message.answer(str(i))
+                for i in range(0, len(l)):
+                    text += f'{i+1}. {l[i]}\n'
+                await callback.message.answer(text)
                 await callback.message.answer('Скопируйте и напишите мне название спорта и я предложу вам секцию')
             else:
                 await callback.message.answer('Вам не подошел ни один вид спорта, попробуйте еще раз')
@@ -146,7 +151,6 @@ async def callback(callback: types.CallbackQuery):
             await callback.message.edit_text('КАРАУЛ ТЫ СЛОМАЛ ТЕСТ')
             number = 0
             decit.clear()
-    print(decit)
 
 
 async def main() -> None:

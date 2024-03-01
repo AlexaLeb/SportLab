@@ -47,7 +47,7 @@ def advise_sport(kinds: dict):
             for i in v:
                 if i in choosen:
                     same.append(i)
-            if len(same) > 9:
+            if len(same) > 13:
                 end.append(k)
     print(end)
     print(len(end))
