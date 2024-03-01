@@ -11,12 +11,13 @@ def shoose_sport(sport: str):
 
 
 def sport_list():
-    sport_list = []
+    sport_lis = []
     sport_dic = get_sport()
     for element in sport_dic:
         for el in element['fields']:
-            sport_list.append(element['fields']['Спорт'])
-    return set(sport_list)
+            sport_lis.append(element['fields']['Спорт'])
+    sport_lists = sorted(set(sport_lis))
+    return sport_lists
 
 
 def choose_section(sport=None):
@@ -24,13 +25,42 @@ def choose_section(sport=None):
     return get_section()
 
 
+def advise_sport(kinds: dict):
+    sports = get_sport()
+    pool = []
+    choosen = []
+    end = []
+    for element in kinds.items():
+        choosen.append(element)
+    for element in sports:
+        di = {}
+        name = element['fields'].pop('Спорт')
+        c = element['fields']
+        po = []
+        for i in c.items():
+            po.append(i)
+        di[name] = po
+        pool.append(di)
+    for element in pool:
+        same = []
+        for k, v in element.items():
+            for i in v:
+                if i in choosen:
+                    same.append(i)
+            if len(same) > 9:
+                end.append(k)
+    print(end)
+    print(len(end))
+    return sorted(end)
+
+
+
+
 def sections(sport=None):
     sect = []
     sports = shoose_sport(sport)
     sports_amount = sports['секции']
     sections_d = choose_section()
-    # pprint(sports_amount)
-    # print()
     for element in sections_d:
         if element['id'] in sports_amount:
             element['fields'].pop('Спорт')
@@ -50,6 +80,22 @@ def create_text(text):
     print(tx)
     return tx
 
+d = {
+    'Есть ракетка?': 'нет',
+    'Командный?': 'нет',
+    'С клюшкой?': 'да',
+    'С мячом?': 'да',
+    'Связан с борьбой?': 'да',
+    'Сезонность': 'зима',
+    'Сильно физически активный?': 'нет',
+    'Стихия': 'горы',
+    'в помещении или на улице': 'помещение',
+    'достаточно большие финансовые вложения': 'да',
+    'популярный в России': 'нет',
+    'связан с животными': 'нет',
+    'связан с оружием?': 'да',
+    'травмоопасный?': 'нет'
+}
 
 if __name__ == "__main__":
-    sections('футбол')
+    advise_sport(d)
