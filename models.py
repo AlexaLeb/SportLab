@@ -47,7 +47,7 @@ def advise_sport(kinds: dict):
             for i in v:
                 if i in choosen:
                     same.append(i)
-            if len(same) > 11:  # Параметр отвечает за сходство рекомендательной работы
+            if len(same) > 10:  # Параметр отвечает за сходство рекомендательной работы
                 end.append(k)
     print(end)
     print(len(end))
