@@ -7,8 +7,7 @@ from models import sections, sport_list, advise_sport
 from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
-from aiogram.types import Message, ReplyKeyboardMarkup, \
-    KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import Message
 from aiogram.utils.markdown import hbold
 from keyboard import kb, test_kb1, test_kb2, test_kb3, test_kb4
 
@@ -19,9 +18,12 @@ TOKEN = "7081007147:AAFx8B6HBYQ-o88bNjJbgwPKucbo-dw1vuA"
 dp = Dispatcher()
 bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
 number = 0
+
+
 async def on_startup(_):
     print('Бот был запущен')
 decit = {}
+
 
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
@@ -34,11 +36,11 @@ async def command_start_handler(message: Message) -> None:
     # method automatically or call API method directly via
     # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
 
-    await message.answer(f"Hello, {hbold(message.from_user.full_name)}! "
+    await message.answer(f"Привет, {hbold(message.from_user.full_name)}! "
                          f"\nЯ пока мало чего умею, но над мной работают. "
-                         f"пока я буду только тебя дразнить",
+                         f"я могу подобрать тебе секцию если ты напишешь его название или можешь пройти тестик"
+                         f"по этим ответам я постараюсь подобрать тебе сам вид спорта",
                          reply_markup=kb())
-
 
 
 @dp.message()
@@ -76,6 +78,8 @@ async def echo_handler(message: types.Message) -> None:
         # But not all the types is supported to be copied so need to handle it
         await message.answer("Ты вызвал ошибку, как ты меня смог сломать<b>!?</b>\n"
                              "но я все еще продолжаю работать")
+
+
 @dp.callback_query()
 async def callback(callback: types.CallbackQuery):
     global number

@@ -54,8 +54,6 @@ def advise_sport(kinds: dict):
     return sorted(end)
 
 
-
-
 def sections(sport=None):
     sect = []
     sports = shoose_sport(sport)
@@ -75,10 +73,11 @@ def create_text(text):
         a = f'<b>{t["section_name"]}</b>\n\n'
         t.pop("section_name")
         for i in t.items():
-            a += (f'{i[0]}: {i[1]} \n')
+            a += f'{i[0]}: {i[1]} \n'
         tx.append(a)
     print(tx)
     return tx
+
 
 d = {
     'Есть ракетка?': 'нет',
