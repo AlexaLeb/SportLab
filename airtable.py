@@ -3,20 +3,18 @@ from pprint import pprint
 
 
 api = Api('patSxQtpMd6a4iKOq.83e528e67458f9fbce584126c80b9f5fd518401f5aa629591a7264ecbba04082')
-sport_table = api.table('appeNb48kX0169buS', 'tblS4WhViKaVEWkcO')
-section_table = api.table('appeNb48kX0169buS', 'tblVQ1TvSKcuT8j9f')
+
 
 DB_ID = 'appeNb48kX0169buS'
 sport_id = 'tblS4WhViKaVEWkcO'
 section_id = 'tblVQ1TvSKcuT8j9f'
+user_id = 'tblKa5uPzW1YDGIco'
+
+sport_table = api.table(DB_ID, sport_id)
+section_table = api.table(DB_ID, section_id)
+user_table = api.table(DB_ID, user_id)
 
 curl = f'https://api.airtable.com/v0/{DB_ID}/%D0%A1%D0%BF%D0%BE%D1%80%D1%82?maxRecords=3&view=Main%20View'
-
-headers = {
-    'Authorization': f"Bearer ",
-    'Content-Type': 'application/json'
-}
-# connepatSxQtpMd6a4iKOq.d7963b47ef518290e0df426945ddbe6cad681d6a0234bdf3c6a555c43d9c0df1ction (User ID: usrB0Qw3hx2CRgHQL)
 
 def get_sport():
     return sport_table.all()
@@ -29,6 +27,8 @@ def get_section(sport=None):
         return section_table.all()
     else:
         return 'в разработке'
+
+
 
 
 

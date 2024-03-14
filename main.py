@@ -71,13 +71,14 @@ async def echo_handler(message: types.Message) -> None:
         else:
             # Send a copy of the received message
             mas = sections(message.text.lower())
+            if mas[0] != 'В нашей базе данных нет этого спорта или секции. Может быть ты написал свой запрос с ошибкой, проверь':
+                await message.answer(f'Найдено секций - {len(mas)} ')
             for i in range(len(mas)):
                 await message.answer(str(mas[i]))
 
     except TypeError:
         # But not all the types is supported to be copied so need to handle it
-        await message.answer("Ты вызвал ошибку, как ты меня смог сломать<b>!?</b>\n"
-                             "но я все еще продолжаю работать")
+        await message.answer("Я тебя не понял, можешь уточнить свой запрос пожалуйста<b>!?</b>")
 
 
 @dp.callback_query()

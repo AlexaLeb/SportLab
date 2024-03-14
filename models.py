@@ -47,7 +47,7 @@ def advise_sport(kinds: dict):
             for i in v:
                 if i in choosen:
                     same.append(i)
-            if len(same) > 10:  # Параметр отвечает за сходство рекомендательной работы
+            if len(same) > 12:  # Параметр отвечает за сходство рекомендательной работы
                 end.append(k)
     print(end)
     print(len(end))
@@ -55,16 +55,19 @@ def advise_sport(kinds: dict):
 
 
 def sections(sport=None):
-    sect = []
-    sports = shoose_sport(sport)
-    sports_amount = sports['секции']
-    sections_d = choose_section()
-    for element in sections_d:
-        if element['id'] in sports_amount:
-            element['fields'].pop('Спорт')
-            sect.append(element['fields'])
-    text = create_text(sect)
-    return text
+    try:
+        sect = []
+        sports = shoose_sport(sport)
+        sports_amount = sports['секции']
+        sections_d = choose_section()
+        for element in sections_d:
+            if element['id'] in sports_amount:
+                element['fields'].pop('Спорт')
+                sect.append(element['fields'])
+        text = create_text(sect)
+        return text
+    except:
+        return ['В нашей базе данных нет этого спорта или секции. Может быть ты написал свой запрос с ошибкой, проверь']
 
 
 def create_text(text):
