@@ -1,4 +1,4 @@
-from airtable import get_sport, get_section
+from airtable import get_sport, get_section, get_data
 from pprint import pprint
 
 
@@ -25,11 +25,20 @@ def choose_section(sport=None):
     return get_section()
 
 
-def advise_sport(kinds: dict):
+def advise_sport(id: str):
     sports = get_sport()
+    data = get_data()
+    global kinds
+    for i in data:
+        if i['fields']['Name'] == id:
+            i['fields'].pop('счетчик для опроса')
+            kinds = i['fields']
+            pprint(kinds)
+            break
     pool = []
     choosen = []
     end = []
+
     for element in kinds.items():
         choosen.append(element)
     for element in sports:
@@ -99,5 +108,5 @@ d = {
     'травмоопасный?': 'нет'
 }
 
-if __name__ == "__main__":
-    advise_sport(d)
+# if __name__ == "__main__":
+    # print(advise_sport('bob'))

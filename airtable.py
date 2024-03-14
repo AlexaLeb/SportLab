@@ -14,7 +14,6 @@ sport_table = api.table(DB_ID, sport_id)
 section_table = api.table(DB_ID, section_id)
 user_table = api.table(DB_ID, user_id)
 
-curl = f'https://api.airtable.com/v0/{DB_ID}/%D0%A1%D0%BF%D0%BE%D1%80%D1%82?maxRecords=3&view=Main%20View'
 
 def get_sport():
     return sport_table.all()
@@ -28,6 +27,42 @@ def get_section(sport=None):
     else:
         return 'в разработке'
 
+
+def create_data(data):
+    list_data = get_data()
+    for i in list_data:
+        if i['fields']['Name'] == str(data):
+            user_table.delete(i['id'])
+            user_table.create({'Name': data, 'счетчик для опроса': 0})
+            return True
+    return user_table.create({'Name': data, 'счетчик для опроса': 0})
+
+
+def get_data():
+    return user_table.all()
+
+
+def update_data(data: list):
+    a, b = data
+    return user_table.update(str(a), b)
+
+def update_data1(data: list):
+    a, b = data
+    list_data = get_data()
+    for i in list_data:
+        if i['fields']['Name'] == str(a):
+            user_table.update(i['id'], b)
+            print("обновил")
+            return True
+    return ['Ошибка']
+
+
+
+
+# if __name__ == "__main__":
+#     pprint(get_data())
+#     data = ['bob', 'счетчик для опроса', 5]
+#     print(update_data(data))
 
 
 

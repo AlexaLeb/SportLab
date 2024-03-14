@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import sys
-
 from pprint import pprint
 from models import sections, sport_list, advise_sport
 from aiogram import Bot, Dispatcher, types
@@ -10,6 +9,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 from aiogram.utils.markdown import hbold
 from keyboard import kb, test_kb1, test_kb2, test_kb3, test_kb4
+from airtable import get_data,  create_data, update_data, update_data1
 
 # Bot token can be obtained via https://t.me/BotFather
 TOKEN = "7081007147:AAFx8B6HBYQ-o88bNjJbgwPKucbo-dw1vuA"
@@ -17,12 +17,12 @@ TOKEN = "7081007147:AAFx8B6HBYQ-o88bNjJbgwPKucbo-dw1vuA"
 # All handlers should be attached to the Router (or Dispatcher)
 dp = Dispatcher()
 bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
-number = 0
+
 
 
 async def on_startup(_):
     print('Бот был запущен')
-decit = {}
+
 
 
 @dp.message(CommandStart())
@@ -35,6 +35,13 @@ async def command_start_handler(message: Message) -> None:
     # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
     # method automatically or call API method directly via
     # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
+    dat = get_data()
+    l = []
+    for i in dat:
+        if i['fields'] == message.from_user.id:
+            l.append(1)
+    if len(l) == 0:
+        create_data(str(message.from_user.id))
 
     await message.answer(f"Привет, {hbold(message.from_user.full_name)}! "
                          f"\nЯ пока мало чего умею, но над мной работают. "
@@ -47,11 +54,9 @@ async def command_start_handler(message: Message) -> None:
 async def echo_handler(message: types.Message) -> None:
     """
     Handler will forward receive a message back to the sender
-
     By default, message handler will handle all message types (like a text, photo, sticker etc.)
     """
-    global number
-    number = 0
+    update_data1([message.from_user.id, {'счетчик для опроса': 0}])
     try:
         if message.text.lower() == 'хочу выбрать секцию':
             await message.answer(f'тут ты должен назвать секцию. '
@@ -83,7 +88,6 @@ async def echo_handler(message: types.Message) -> None:
 
 @dp.callback_query()
 async def callback(callback: types.CallbackQuery):
-    global number
     qust = {
         0: 'Хотел бы ты, чтобы спорт был с клюшкой / битой?',
         1: 'Спорт должен быть командный?',
@@ -119,16 +123,40 @@ async def callback(callback: types.CallbackQuery):
     }
 
     if callback.data.startswith('тест'):
+
+        local = []
+        data = get_data()
+        a = True
+        c = 0
+        while a and c < 100000:
+            for i in data:
+                if int(i['fields']['Name']) == int(callback.from_user.id):
+                    print('нашел')
+                    print(i['fields']['Name'])
+                    number = i['fields']['счетчик для опроса']
+                    id = i['id']
+                    local.append(number)
+                    local.append(id)
+                    print(number)
+                    a = False
+                    break
+
+                else:
+                    c += 1
+        if c == 100000:
+            await callback.message.answer('ошибочка, попробуй перезапусить меня через /start')
+        number, id = local
+
         if number < 13 and number != 4 and number != 5 and number != 11:
             await callback.message.edit_text(qust[number+1], reply_markup=test_kb1())
-            decit[typ[number]] = callback.data.split()[-1]
-            number += 1
+            num = number + 1
+            update_data([id, {'счетчик для опроса': num, typ[number]: callback.data.split()[-1]}])
         elif number == 13:
             await callback.message.edit_text('Спасибо за прохождение теста!')
-            decit[typ[number]] = callback.data.split()[-1]
+            update_data([id, {typ[number]: callback.data.split()[-1]}])
             await callback.message.answer('Подожди, я думаю какой спорт тебе подходит)')
 
-            l = advise_sport(decit)
+            l = advise_sport(str(callback.from_user.id))
             text = ''
             if len(l) > 0:
                 await callback.message.answer('Вам подходит:')
@@ -138,24 +166,17 @@ async def callback(callback: types.CallbackQuery):
                 await callback.message.answer('Скопируйте и напишите мне название спорта и я предложу вам секцию')
             else:
                 await callback.message.answer('Вам не подошел ни один вид спорта, попробуйте еще раз')
-            decit.clear()
-            number = 0
         elif number == 4:
             await callback.message.edit_text(qust[number+1], reply_markup=test_kb2())
-            decit[typ[number]] = callback.data.split()[-1]
-            number += 1
+            update_data([id, {'счетчик для опроса': number+1, typ[number]: callback.data.split()[-1]}])
         elif number == 5:
             await callback.message.edit_text(qust[number+1], reply_markup=test_kb3())
-            decit[typ[number]] = callback.data.split()[-1]
-            number += 1
+            update_data([id, {'счетчик для опроса': number+1, typ[number]: callback.data.split()[-1]}])
         elif number == 11:
             await callback.message.edit_text(qust[number+1], reply_markup=test_kb4())
-            decit[typ[number]] = callback.data.split()[-1]
-            number += 1
+            update_data([id, {'счетчик для опроса': number+1, typ[number]: callback.data.split()[-1]}])
         else:
             await callback.message.edit_text('КАРАУЛ ТЫ СЛОМАЛ ТЕСТ')
-            number = 0
-            decit.clear()
 
 
 async def main() -> None:
