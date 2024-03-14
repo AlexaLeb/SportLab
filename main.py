@@ -44,9 +44,9 @@ async def command_start_handler(message: Message) -> None:
         create_data(str(message.from_user.id))
 
     await message.answer(f"Привет, {hbold(message.from_user.full_name)}! "
-                         f"\nЯ пока мало чего умею, но над мной работают. "
+                         f"\n"
                          f"я могу подобрать тебе секцию если ты напишешь его название или можешь пройти тестик"
-                         f"по этим ответам я постараюсь подобрать тебе сам вид спорта",
+                         f"по этим ответам я постараюсь подобрать тебе сам вид спорта. version 1.1 UserBase",
                          reply_markup=kb())
 
 
